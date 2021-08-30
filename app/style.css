@@ -1,0 +1,68 @@
+body {
+    scroll-behavior: smooth;
+    background-color: #343a40;
+    color: white;
+}
+
+:root {
+    --bg: #a970ff;
+    --grey: #1f1f23;
+}
+
+#header {
+    background-color: var(--grey);
+    color: var(--bg);
+    border-bottom: 1px solid var(--bg);
+}
+
+#chat {
+    background-color: var(--grey);
+    border-bottom: 1px solid var(--bg);
+}
+
+#cambiar, #nombre {
+    background-color: var(--grey) !important;
+    border: 1px solid var(--bg);
+    color: var(--bg);
+    transition: 0.5s;
+}
+
+#nombre:focus {
+    box-shadow: var(--bg) 0 0 0 0.05rem ;
+}
+
+#cambiar:hover {
+    background-color: var(--bg) !important;
+    color: var(--grey);
+}
+
+.aviso {
+    border-top: 1px var(--bg) !important;
+    border-bottom: 1px var(--bg) !important;
+}
+
+#mensaje {
+    border-bottom: 1px solid var(--bg) !important;
+}
+
+#contador {
+    color: white;
+}
+
+
+#chat::-webkit-scrollbar {
+    width: 5px;
+}
+
+#chat::-webkit-scrollbar-track {
+    background: rgb(46, 46, 46);
+}
+
+#chat::-webkit-scrollbar-thumb {
+    background: var(--bg);
+}
+
+#chat::-webkit-scrollbar-thumb:hover {
+    background: #442d66;
+    transition: 0.5;   
+}
