@@ -38,5 +38,5 @@ document.getElementById('chat').addEventListener("scroll", function(){
    } else {
        parar = false;
    }
-   lastScrollTop = st <= 0 ? 0 : st; // For Mobile or negative scrolling
+   lastScrollTop = st <= 0 ? 0 : st;
 }, false);
