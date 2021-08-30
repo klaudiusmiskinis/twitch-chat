@@ -22,7 +22,7 @@ document.getElementById('cambiar').onclick = function() {
     if(nombre.length > 0) {
         socket.emit('nombre', nombre);
         let eleMensaje = '<div class="d-row mb-2 aviso">' +
-                        '<div><b> Se ha cambiado el canal a' + nombre + '</b></div>' +
+                        '<div><b> Se ha cambiado el canal a ' + nombre + '</b></div>' +
                        ' </div>';
         let chat = document.getElementById('chat');
         chat.insertAdjacentHTML('beforeend', eleMensaje);
