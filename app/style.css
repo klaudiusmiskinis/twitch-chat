@@ -24,7 +24,7 @@ b {
     border-bottom: 1px solid var(--bg);
 }
 
-#cambiar, #nombre {
+#cambiar, #nombre, #bug {
     background-color: var(--grey) !important;
     border: 1px solid var(--bg);
     color: var(--bg);
@@ -35,7 +35,7 @@ b {
     box-shadow: var(--bg) 0 0 0 0.05rem ;
 }
 
-#cambiar:hover {
+#cambiar:hover, #bug:hover {
     background-color: var(--bg) !important;
     color: var(--grey);
 }
