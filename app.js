@@ -44,8 +44,9 @@ client.on('message', (channel, tags, message, self) => {
 });
 
 async function cambiarNombre(nombre) {
-        client.part(client.opts.channels[0])
-        client.opts.channels = ['#' + nombre]
+	client.opts.channels = [];
+        client.part(client.opts.channels[0]);
+        client.opts.channels = ['#' + nombre];
         await client.connect();
 }
 
