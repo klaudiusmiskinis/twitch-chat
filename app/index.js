@@ -3,7 +3,6 @@ let cont = 0;
 let parar = false;
 
 socket.on('mensaje', (mensaje) => {
-    console.log(mensaje.nombre)
     let eleMensaje = '<div class="d-row mb-2" id="mensaje">' +
                         '<div><b>' + mensaje.nombre.username + '</b></div>' +
                         '<div>' + mensaje.mensaje + '</div>' + 
