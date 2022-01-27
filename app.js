@@ -21,6 +21,10 @@ io.on("connection", (socket) => {
     socket.on('nombre', (nombre) => {
         cambiarNombre(nombre)
     })
+
+    socket.on('bug', () => {
+        bug();
+    })
 })
 
 http.listen(port, () => {
@@ -48,7 +52,15 @@ async function cambiarNombre(nombre) {
     }
 }
 
+async function bug() {
+    try {
+        client.opts.channels = [];
+        await client.disconnect();
+    } catch (e) {
+        return e;
+    }
+}
+
 function mandarMensaje(mensaje) {
-    console.log(client.opts.channels);
     io.emit('mensaje', mensaje)
 }
