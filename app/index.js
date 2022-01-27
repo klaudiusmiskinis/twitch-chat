@@ -41,6 +41,10 @@ document.getElementById('cambiar').onclick = function() {
     }
 }
 
+document.getElementById('bug').onclick = function() {
+    socket.emit('bug');
+}
+
 var lastScrollTop = 0;
 
 document.getElementById('chat').addEventListener("scroll", function(){
