@@ -40,12 +40,15 @@ client.on('message', (channel, tags, message, self) => {
 });
 
 async function cambiarNombre(nombre) {
-	client.opts.channels = [];
-        client.part(client.opts.channels[0]);
+    try {
         client.opts.channels = ['#' + nombre];
         await client.connect();
+    } catch (e) {
+        return e;
+    }
 }
 
 function mandarMensaje(mensaje) {
+    console.log(client.opts.channels);
     io.emit('mensaje', mensaje)
 }
