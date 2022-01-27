@@ -4,6 +4,10 @@ body {
     color: white;
 }
 
+b {
+    color: var(--bg);
+}
+
 :root {
     --bg: #a970ff;
     --grey: #1f1f23;
@@ -36,11 +40,6 @@ body {
     color: var(--grey);
 }
 
-.aviso {
-    border-top: 1px var(--bg) !important;
-    border-bottom: 1px var(--bg) !important;
-}
-
 #mensaje {
     border-bottom: 1px solid var(--bg) !important;
 }
@@ -65,4 +64,13 @@ body {
 #chat::-webkit-scrollbar-thumb:hover {
     background: #442d66;
     transition: 0.5;   
+}
+
+.aviso {
+    border-top: 1px var(--bg) !important;
+    border-bottom: 1px var(--bg) !important;
+}
+
+.bg-color {
+    background-color: var(--bg) !important;
 }
