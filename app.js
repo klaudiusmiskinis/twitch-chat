@@ -1,15 +1,11 @@
 const express = require('express');
-const app = require('express')();
+const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 const tmi = require('tmi.js');
 const port = process.env.PORT || 3000;
 
 app.use(express.static(__dirname + '/app'));
-
-app.get('/socket.io.js', (req, res) => {
-    res.sendFile(__dirname + './node_modules/socket.io/socket.io.js')
-})
 
 io.on("connection", (socket) => {
     console.log("Conectado")
@@ -31,8 +27,14 @@ http.listen(port, () => {
     console.log('Servidor encendido en el puerto' , `${port}`);
 });
 
-let client = new tmi.Client({channels: ['illojuan']});
-client.connect();
+const defaultChannel = process.env.TWITCH_CHANNEL || 'illojuan';
+let client = new tmi.Client({
+    channels: [defaultChannel],
+    connection: { reconnect: false }
+});
+client.connect().catch(err => {
+    console.error('Failed to connect to Twitch:', err.message);
+});
 
 
 client.on('message', (channel, tags, message, self) => {
@@ -48,7 +50,7 @@ async function cambiarNombre(nombre) {
         client.opts.channels = ['#' + nombre];
         await client.connect();
     } catch (e) {
-        return e;
+        console.error('Error cambiando de canal:', e.message);
     }
 }
 
@@ -57,7 +59,7 @@ async function bug() {
         client.opts.channels = [];
         await client.disconnect();
     } catch (e) {
-        return e;
+        console.error('Error al reiniciar conexión:', e.message);
     }
 }
 
