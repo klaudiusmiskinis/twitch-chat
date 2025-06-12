@@ -3,7 +3,8 @@ const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 const tmi = require('tmi.js');
-const port = process.env.PORT || 3000;
+const config = require('./config');
+const port = process.env.PORT || config.port;
 
 app.use(express.static(__dirname + '/app'));
 
@@ -27,7 +28,7 @@ http.listen(port, () => {
     console.log('Servidor encendido en el puerto' , `${port}`);
 });
 
-const defaultChannel = process.env.TWITCH_CHANNEL || 'illojuan';
+const defaultChannel = process.env.TWITCH_CHANNEL || config.channel;
 let client = new tmi.Client({
     channels: [defaultChannel],
     connection: { reconnect: false }
