@@ -20,8 +20,14 @@ function logEvent(message) {
 
 app.use(express.static(__dirname + '/app'));
 
-// Map to keep track of tmi clients and sockets per channel
+// Map to keep track of tmi clients, sockets and stored messages per channel
 const channels = {};
+
+function sendWatchers(channelName) {
+    const channel = channels[channelName];
+    if (!channel) return;
+    io.to(channelName).emit('watchers', channel.sockets.size);
+}
 
 io.on('connection', (socket) => {
     metrics.connections++;
@@ -46,13 +52,20 @@ io.on('connection', (socket) => {
                 channels: [channelName],
                 connection: { reconnect: false }
             });
-            channels[channelName] = { client, sockets: new Set() };
+            channels[channelName] = { client, sockets: new Set(), messages: [] };
 
             client.on('message', (channel, tags, message, self) => {
                 const mensaje = {
                     nombre: tags,
                     mensaje: message
                 };
+                const store = channels[channelName];
+                if (store) {
+                    store.messages.push({ usuario: tags.username, mensaje: message });
+                    if (store.messages.length > 100) {
+                        store.messages.shift();
+                    }
+                }
                 io.to(channelName).emit('mensaje', mensaje);
             });
 
@@ -66,6 +79,7 @@ io.on('connection', (socket) => {
 
         channels[channelName].sockets.add(socket);
         socket.join(channelName);
+        sendWatchers(channelName);
     });
 
     socket.on('bug', () => {
@@ -94,12 +108,24 @@ function leaveChannel(socket, channelName) {
             console.error('Error al desconectar:', err.message);
         });
         delete channels[channelName];
+    } else {
+        sendWatchers(channelName);
     }
 }
 
 // Expose metrics at /metrics
 app.get('/metrics', (req, res) => {
     res.json(metrics);
+});
+
+// Provide stored messages in JSON format
+app.get('/messages/:channel', (req, res) => {
+    const channelName = req.params.channel;
+    const channel = channels[channelName];
+    if (!channel) {
+        return res.status(404).json({ error: 'Canal no encontrado' });
+    }
+    res.json(channel.messages);
 });
 
 http.listen(port, () => {
