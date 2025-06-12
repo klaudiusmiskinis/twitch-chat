@@ -6,13 +6,27 @@ const tmi = require('tmi.js');
 const config = require('./config');
 const port = process.env.PORT || config.port;
 
+// Simple metrics to track usage
+const metrics = {
+    connections: 0,
+    disconnections: 0,
+    misuseEvents: 0,
+    activeSockets: 0
+};
+
+function logEvent(message) {
+    console.log(new Date().toISOString(), message);
+}
+
 app.use(express.static(__dirname + '/app'));
 
 // Map to keep track of tmi clients and sockets per channel
 const channels = {};
 
 io.on('connection', (socket) => {
-    console.log('Conectado');
+    metrics.connections++;
+    metrics.activeSockets++;
+    logEvent(`Conectado ${socket.id} desde ${socket.handshake.address}. Activas: ${metrics.activeSockets}`);
 
     socket.on('join', async (channelName) => {
         if (!channelName) {
@@ -25,6 +39,7 @@ io.on('connection', (socket) => {
         }
 
         socket.channelName = channelName;
+        logEvent(`${socket.id} se une al canal ${channelName}`);
 
         if (!channels[channelName]) {
             const client = new tmi.Client({
@@ -53,8 +68,15 @@ io.on('connection', (socket) => {
         socket.join(channelName);
     });
 
+    socket.on('bug', () => {
+        metrics.misuseEvents++;
+        logEvent(`Posible mal uso reportado por ${socket.id}. Total: ${metrics.misuseEvents}`);
+    });
+
     socket.on('disconnect', () => {
-        console.log('Desconectado');
+        metrics.disconnections++;
+        metrics.activeSockets--;
+        logEvent(`Desconectado ${socket.id}. Activas: ${metrics.activeSockets}`);
         const channelName = socket.channelName;
         if (channelName) {
             leaveChannel(socket, channelName);
@@ -74,6 +96,11 @@ function leaveChannel(socket, channelName) {
         delete channels[channelName];
     }
 }
+
+// Expose metrics at /metrics
+app.get('/metrics', (req, res) => {
+    res.json(metrics);
+});
 
 http.listen(port, () => {
     console.log('Servidor encendido en el puerto', `${port}`);

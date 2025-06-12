@@ -20,3 +20,9 @@ PORT=4000 TWITCH_CHANNEL=mychannel npm start
 
 If no environment variables are provided the values from `config.js` will be used.
 Adjust `config.js` if you want to change the defaults in version control.
+
+## Metrics
+
+The server exposes basic runtime metrics at `http://localhost:<port>/metrics`.
+These metrics include the number of connections, disconnections and detected
+misuse events.
