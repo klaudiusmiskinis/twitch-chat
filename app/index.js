@@ -2,6 +2,8 @@ const socket = io();
 const defaultChannel = 'illojuan';
 let cont = 0;
 let parar = false;
+let currentChannel = defaultChannel;
+const watchersEl = document.getElementById('watchers');
 
 // Join default channel once connected
 socket.emit('join', defaultChannel);
@@ -45,10 +47,19 @@ socket.on('mensaje', (mensaje) => {
     document.getElementById('contador').innerHTML = " " + cont;
 })
 
+socket.on('watchers', (count) => {
+    if (count > 1) {
+        watchersEl.textContent = `Somos ${count} viendo este chat`;
+    } else {
+        watchersEl.textContent = '';
+    }
+});
+
 document.getElementById('cambiar').onclick = function() {
     let nombre = document.getElementById('nombre').value;
     if (nombre.length > 0) {
         socket.emit('join', nombre);
+        currentChannel = nombre;
         const chat = document.getElementById('chat');
         const wrapper = document.createElement('div');
         wrapper.classList.add('d-row', 'mb-2', 'aviso', 'bg-color', 'rounded', 'p-1', 'px-2');
@@ -64,6 +75,21 @@ document.getElementById('cambiar').onclick = function() {
 
 document.getElementById('bug').onclick = function() {
     socket.emit('bug');
+}
+
+document.getElementById('descargar').onclick = async function() {
+    const res = await fetch(`/messages/${currentChannel}`);
+    if (!res.ok) return;
+    const data = await res.json();
+    const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${currentChannel}-chat.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
 }
 
 var lastScrollTop = 0;

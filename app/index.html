@@ -26,10 +26,14 @@
             </div>
             <div class="row">
                 <p>Contador de mensaje:<span id="contador"></span></p>
+                <p id="watchers" class="mt-1"></p>
             </div>
         </div>
         <div class="row justify-content-center">
             <div class="align-self-center p-3 my-5 col-12" id="chat"></div>
+            <div class="col-12 text-end">
+                <button id="descargar" class="mt-2">Descargar JSON</button>
+            </div>
         </div>
     </div>
     <script src="/socket.io/socket.io.js"></script>
