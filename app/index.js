@@ -1,6 +1,11 @@
-const socket = io()
+const socket = io();
+const defaultChannel = 'illojuan';
 let cont = 0;
 let parar = false;
+
+// Join default channel once connected
+socket.emit('join', defaultChannel);
+document.getElementById('nombre').value = defaultChannel;
 
 socket.on('mensaje', (mensaje) => {
     const chat = document.getElementById('chat');
@@ -42,8 +47,8 @@ socket.on('mensaje', (mensaje) => {
 
 document.getElementById('cambiar').onclick = function() {
     let nombre = document.getElementById('nombre').value;
-    if(nombre.length > 0) {
-        socket.emit('nombre', nombre);
+    if (nombre.length > 0) {
+        socket.emit('join', nombre);
         const chat = document.getElementById('chat');
         const wrapper = document.createElement('div');
         wrapper.classList.add('d-row', 'mb-2', 'aviso', 'bg-color', 'rounded', 'p-1', 'px-2');
