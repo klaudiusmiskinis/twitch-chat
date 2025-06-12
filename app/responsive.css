@@ -1,61 +1,16 @@
 #chat {
-    height: 1100px;
-    width: 1500px;
-    overflow-x: scroll;
-    overflow-y: hidden;
-    transition: all 1s cubic-bezier(0.1, 0.79, 0.49, 0.96) 0s
+  transition: all 0.4s ease;
+  width: 100%;
 }
 
-@media screen and (max-height: 1300px) {
-    #chat {
-        height: 1060px;
-        
-    }
-}
-@media screen and (max-height: 1200px) {
-    #chat {
-        height: 960px;
-    }
+@media (min-width: 768px) {
+  #chat {
+    height: 75vh;
+  }
 }
 
-@media screen and (max-height: 1100px) {
-    #chat {
-        height: 860px;
-    }
-}
-
-@media screen and (max-height: 1000px) {
-    #chat {
-        height: 760px;
-    }
-}
-
-@media screen and (max-height: 900px) {
-    #chat {
-        height: 660px;
-    }
-}
-
-@media screen and (max-height: 800px) {
-    #chat {
-        height: 560px;
-    }
-}
-
-@media screen and (max-height: 700px) {
-    #chat {
-        height: 460px;
-    }
-}
-
-@media screen and (max-height: 600px) {
-    #chat {
-        height: 360px;
-    }
-}
-
-@media screen and (max-height: 500px) {
-    #chat {
-        height: 260px;
-    }
+@media (min-width: 1200px) {
+  #chat {
+    height: 80vh;
+  }
 }
