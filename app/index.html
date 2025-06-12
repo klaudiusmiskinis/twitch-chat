@@ -13,23 +13,23 @@
 </head>
 <body>
     <div class="container-fluid">
-        <div class="row p-2" id="header">
+        <div class="row align-items-center p-3" id="header">
             <div class="col">
                 <h4 id="titulo">Twitch chat</h4>
             </div>
-            <div class="col mt-2">
-                <input class="form-control form-control-sm" placeholder="Introduce el nombre del canal" id="nombre">
+            <div class="col mt-2 mt-md-0">
+                <input placeholder="Introduce el nombre del canal" id="nombre">
             </div>
-            <div class="col mt-2">
-                <button class="btn btn-sm" id="cambiar">Cambiar</button>
-                <button class="btn btn-sm" id="bug">Reiniciar</button>
+            <div class="col-auto mt-2 mt-md-0">
+                <button id="cambiar">Cambiar</button>
+                <button id="bug">Reiniciar</button>
             </div>
             <div class="row">
                 <p>Contador de mensaje:<span id="contador"></span></p>
             </div>
         </div>
         <div class="row justify-content-center">
-            <div class="overflow-auto align-self-center p-3 my-5 col-12 rounded shadow" id="chat"></div>
+            <div class="align-self-center p-3 my-5 col-12" id="chat"></div>
         </div>
     </div>
     <script src="/socket.io/socket.io.js"></script>
