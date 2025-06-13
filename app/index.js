@@ -4,10 +4,31 @@ let cont = 0;
 let parar = false;
 let currentChannel = defaultChannel;
 const watchersEl = document.getElementById('watchers');
+const statusEl = document.getElementById('status');
+
+function showStatus(msg) {
+    if (!statusEl) return;
+    statusEl.textContent = msg;
+    setTimeout(() => {
+        statusEl.textContent = '';
+    }, 3000);
+}
 
 // Join default channel once connected
 socket.emit('join', defaultChannel);
 document.getElementById('nombre').value = defaultChannel;
+
+socket.on('connect', () => {
+    showStatus('Conectado');
+});
+
+socket.on('disconnect', () => {
+    showStatus('Desconectado');
+});
+
+socket.io.on('reconnect_attempt', () => {
+    showStatus('Reconectando...');
+});
 
 socket.on('mensaje', (mensaje) => {
     const chat = document.getElementById('chat');
