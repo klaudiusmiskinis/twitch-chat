@@ -4,6 +4,8 @@ let cont = 0;
 let parar = false;
 let currentChannel = defaultChannel;
 const watchersEl = document.getElementById('watchers');
+const downloadBtn = document.getElementById('descargar');
+downloadBtn.disabled = true;
 
 // Join default channel once connected
 socket.emit('join', defaultChannel);
@@ -44,6 +46,9 @@ socket.on('mensaje', (mensaje) => {
         chat.scrollBy({top: 200})
     }
     cont++;
+    if (cont === 1) {
+        downloadBtn.disabled = false;
+    }
     document.getElementById('contador').innerHTML = " " + cont;
 })
 
@@ -81,6 +86,10 @@ document.getElementById('descargar').onclick = async function() {
     const res = await fetch(`/messages/${currentChannel}`);
     if (!res.ok) return;
     const data = await res.json();
+    if (data.length === 0) {
+        alert('No hay mensajes para descargar.');
+        return;
+    }
     const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
