@@ -4,6 +4,7 @@ let cont = 0;
 let parar = false;
 let currentChannel = defaultChannel;
 const watchersEl = document.getElementById('watchers');
+const cambiarBtn = document.getElementById('cambiar');
 
 // Join default channel once connected
 socket.emit('join', defaultChannel);
@@ -55,7 +56,10 @@ socket.on('watchers', (count) => {
     }
 });
 
-document.getElementById('cambiar').onclick = function() {
+cambiarBtn.addEventListener('click', () => {
+    if (cambiarBtn.disabled) return;
+    cambiarBtn.disabled = true;
+
     let nombre = document.getElementById('nombre').value;
     if (nombre.length > 0) {
         socket.emit('join', nombre);
@@ -71,7 +75,11 @@ document.getElementById('cambiar').onclick = function() {
         wrapper.appendChild(innerDiv);
         chat.appendChild(wrapper);
     }
-}
+
+    setTimeout(() => {
+        cambiarBtn.disabled = false;
+    }, 2000);
+});
 
 document.getElementById('bug').onclick = function() {
     socket.emit('bug');
