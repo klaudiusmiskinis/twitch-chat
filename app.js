@@ -50,7 +50,7 @@ io.on('connection', (socket) => {
         if (!channels[channelName]) {
             const client = new tmi.Client({
                 channels: [channelName],
-                connection: { reconnect: false }
+                connection: { reconnect: true }
             });
             channels[channelName] = { client, sockets: new Set(), messages: [] };
 
@@ -67,6 +67,18 @@ io.on('connection', (socket) => {
                     }
                 }
                 io.to(channelName).emit('mensaje', mensaje);
+            });
+
+            client.on('connected', () => {
+                io.to(channelName).emit('twitch-status', 'connected');
+            });
+
+            client.on('disconnected', () => {
+                io.to(channelName).emit('twitch-status', 'disconnected');
+            });
+
+            client.on('reconnect', () => {
+                io.to(channelName).emit('twitch-status', 'reconnect');
             });
 
             try {

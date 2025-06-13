@@ -4,6 +4,7 @@ let cont = 0;
 let parar = false;
 let currentChannel = defaultChannel;
 const watchersEl = document.getElementById('watchers');
+const statusEl = document.getElementById('status');
 const downloadBtn = document.getElementById('descargar');
 downloadBtn.disabled = true;
 
@@ -57,6 +58,16 @@ socket.on('watchers', (count) => {
         watchersEl.textContent = `Somos ${count} viendo este chat`;
     } else {
         watchersEl.textContent = '';
+    }
+});
+
+socket.on('twitch-status', (state) => {
+    if (state === 'connected') {
+        statusEl.textContent = 'Conectado a Twitch';
+    } else if (state === 'disconnected') {
+        statusEl.textContent = 'Desconectado de Twitch';
+    } else if (state === 'reconnect') {
+        statusEl.textContent = 'Reconectando a Twitch...';
     }
 });
 
