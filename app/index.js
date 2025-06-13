@@ -4,6 +4,9 @@ let cont = 0;
 let parar = false;
 let currentChannel = defaultChannel;
 const watchersEl = document.getElementById('watchers');
+const statusEl = document.getElementById('status');
+const downloadBtn = document.getElementById('descargar');
+downloadBtn.disabled = true;
 
 // Join default channel once connected
 socket.emit('join', defaultChannel);
@@ -88,6 +91,7 @@ document.getElementById('descargar').onclick = async function() {
     URL.revokeObjectURL(url);
 }
 
+
 var lastScrollTop = 0;
 
 document.getElementById('chat').addEventListener("scroll", function(){
@@ -99,3 +103,12 @@ document.getElementById('chat').addEventListener("scroll", function(){
    }
    lastScrollTop = st <= 0 ? 0 : st;
 }, false);
+
+function showStatus(msg) {
+    if (!statusEl) return;
+    statusEl.textContent = msg;
+    setTimeout(() => {
+        statusEl.textContent = '';
+    }, 3000);
+}
+
