@@ -137,6 +137,9 @@ app.get('/messages/:channel', (req, res) => {
     if (!channel) {
         return res.status(404).json({ error: 'Canal no encontrado' });
     }
+    if (channel.messages.length === 0) {
+        return res.status(404).json({ error: 'No hay mensajes disponibles' });
+    }
     res.json(channel.messages);
 });
 
