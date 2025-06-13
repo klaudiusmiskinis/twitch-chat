@@ -71,6 +71,22 @@ socket.on('twitch-status', (state) => {
     }
 });
 
+// Join default channel once connected
+socket.emit('join', defaultChannel);
+document.getElementById('nombre').value = defaultChannel;
+
+socket.on('connect', () => {
+    showStatus('Conectado');
+});
+
+socket.on('disconnect', () => {
+    showStatus('Desconectado');
+});
+
+socket.io.on('reconnect_attempt', () => {
+    showStatus('Reconectando...');
+});
+
 document.getElementById('cambiar').onclick = function() {
     let nombre = document.getElementById('nombre').value;
     if (nombre.length > 0) {
@@ -123,3 +139,12 @@ document.getElementById('chat').addEventListener("scroll", function(){
    }
    lastScrollTop = st <= 0 ? 0 : st;
 }, false);
+
+function showStatus(msg) {
+    if (!statusEl) return;
+    statusEl.textContent = msg;
+    setTimeout(() => {
+        statusEl.textContent = '';
+    }, 3000);
+}
+

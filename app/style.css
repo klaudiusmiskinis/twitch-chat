@@ -65,6 +65,11 @@ body {
   font-weight: 500;
 }
 
+#status {
+  color: var(--accent);
+  font-weight: 500;
+}
+
 b {
   color: var(--accent);
 }
