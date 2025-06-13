@@ -47,44 +47,11 @@ socket.on('mensaje', (mensaje) => {
         chat.scrollBy({top: 200})
     }
     cont++;
-    if (cont === 1) {
-        downloadBtn.disabled = false;
-    }
     document.getElementById('contador').innerHTML = " " + cont;
 })
 
 socket.on('watchers', (count) => {
-    if (count > 1) {
-        watchersEl.textContent = `Somos ${count} viendo este chat`;
-    } else {
-        watchersEl.textContent = '';
-    }
-});
-
-socket.on('twitch-status', (state) => {
-    if (state === 'connected') {
-        statusEl.textContent = 'Conectado a Twitch';
-    } else if (state === 'disconnected') {
-        statusEl.textContent = 'Desconectado de Twitch';
-    } else if (state === 'reconnect') {
-        statusEl.textContent = 'Reconectando a Twitch...';
-    }
-});
-
-// Join default channel once connected
-socket.emit('join', defaultChannel);
-document.getElementById('nombre').value = defaultChannel;
-
-socket.on('connect', () => {
-    showStatus('Conectado');
-});
-
-socket.on('disconnect', () => {
-    showStatus('Desconectado');
-});
-
-socket.io.on('reconnect_attempt', () => {
-    showStatus('Reconectando...');
+    watchersEl.textContent = `👁️ ${count}`;
 });
 
 document.getElementById('cambiar').onclick = function() {
@@ -113,10 +80,6 @@ document.getElementById('descargar').onclick = async function() {
     const res = await fetch(`/messages/${currentChannel}`);
     if (!res.ok) return;
     const data = await res.json();
-    if (data.length === 0) {
-        alert('No hay mensajes para descargar.');
-        return;
-    }
     const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -127,6 +90,7 @@ document.getElementById('descargar').onclick = async function() {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
 }
+
 
 var lastScrollTop = 0;
 

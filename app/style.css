@@ -65,8 +65,7 @@ body {
   font-weight: 500;
 }
 
-#status {
-  color: var(--accent);
+#watchers {
   font-weight: 500;
 }
 
