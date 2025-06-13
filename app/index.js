@@ -48,11 +48,7 @@ socket.on('mensaje', (mensaje) => {
 })
 
 socket.on('watchers', (count) => {
-    if (count > 1) {
-        watchersEl.textContent = `Somos ${count} viendo este chat`;
-    } else {
-        watchersEl.textContent = '';
-    }
+    watchersEl.textContent = `👁️ ${count}`;
 });
 
 document.getElementById('cambiar').onclick = function() {

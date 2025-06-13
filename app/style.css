@@ -65,6 +65,10 @@ body {
   font-weight: 500;
 }
 
+#watchers {
+  font-weight: 500;
+}
+
 b {
   color: var(--accent);
 }
