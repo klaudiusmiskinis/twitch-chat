@@ -6,10 +6,28 @@ let currentChannel = defaultChannel;
 const watchersEl = document.getElementById('watchers');
 const statusEl = document.getElementById('status');
 const downloadBtn = document.getElementById('descargar');
+const usernameInput = document.getElementById('username');
+const openSidebarBtn = document.getElementById('open-sidebar');
+const sidebar = document.getElementById('sidebar');
+const watcherListEl = document.getElementById('watcher-list');
+const privateChat = document.getElementById('private-chat');
+const privateInput = document.getElementById('private-input');
+const privateSend = document.getElementById('private-send');
+
 downloadBtn.disabled = true;
 
+function getUsername() {
+    let name = usernameInput.value.trim();
+    if (!name) {
+        name = 'user' + Math.floor(Math.random() * 10000);
+        usernameInput.value = name;
+    }
+    return name;
+}
+
 // Join default channel once connected
-socket.emit('join', defaultChannel);
+const username = getUsername();
+socket.emit('join', { channel: defaultChannel, user: username });
 document.getElementById('nombre').value = defaultChannel;
 
 socket.on('mensaje', (mensaje) => {
@@ -54,10 +72,37 @@ socket.on('watchers', (count) => {
     watchersEl.textContent = `👁️ ${count}`;
 });
 
+socket.on('watcher-list', (list) => {
+    watcherListEl.innerHTML = '';
+    list.forEach((name) => {
+        const div = document.createElement('div');
+        div.textContent = name;
+        watcherListEl.appendChild(div);
+    });
+});
+
+socket.on('private-message', (data) => {
+    const div = document.createElement('div');
+    div.innerHTML = `<b>${data.user}:</b> ${data.message}`;
+    privateChat.appendChild(div);
+    privateChat.scrollTop = privateChat.scrollHeight;
+});
+
+openSidebarBtn.onclick = function() {
+    sidebar.classList.toggle('open');
+};
+
+privateSend.onclick = function() {
+    const msg = privateInput.value.trim();
+    if (!msg) return;
+    socket.emit('private-message', msg);
+    privateInput.value = '';
+};
+
 document.getElementById('cambiar').onclick = function() {
     let nombre = document.getElementById('nombre').value;
     if (nombre.length > 0) {
-        socket.emit('join', nombre);
+        socket.emit('join', { channel: nombre, user: getUsername() });
         currentChannel = nombre;
         const chat = document.getElementById('chat');
         const wrapper = document.createElement('div');

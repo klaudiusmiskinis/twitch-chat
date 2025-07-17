@@ -21,12 +21,15 @@ function logEvent(message) {
 app.use(express.static(__dirname + '/app'));
 
 // Map to keep track of tmi clients, sockets and stored messages per channel
+// In addition to Twitch messages we also keep a private chat log per channel.
 const channels = {};
 
 function sendWatchers(channelName) {
     const channel = channels[channelName];
     if (!channel) return;
     io.to(channelName).emit('watchers', channel.sockets.size);
+    const list = Array.from(channel.sockets).map((s) => s.username || s.id);
+    io.to(channelName).emit('watcher-list', list);
 }
 
 io.on('connection', (socket) => {
@@ -34,10 +37,14 @@ io.on('connection', (socket) => {
     metrics.activeSockets++;
     logEvent(`Conectado ${socket.id} desde ${socket.handshake.address}. Activas: ${metrics.activeSockets}`);
 
-    socket.on('join', async (channelName) => {
+    socket.on('join', async (data) => {
+        const channelName = typeof data === 'string' ? data : data.channel;
+        const username = typeof data === 'string' ? socket.username || socket.id : data.user || socket.id;
         if (!channelName) {
             return;
         }
+
+        socket.username = username;
 
         // Leave previous channel if switching
         if (socket.channelName && socket.channelName !== channelName) {
@@ -52,7 +59,7 @@ io.on('connection', (socket) => {
                 channels: [channelName],
                 connection: { reconnect: true }
             });
-            channels[channelName] = { client, sockets: new Set(), messages: [] };
+            channels[channelName] = { client, sockets: new Set(), messages: [], privateMessages: [] };
 
             client.on('message', (channel, tags, message, self) => {
                 const mensaje = {
@@ -91,7 +98,22 @@ io.on('connection', (socket) => {
 
         channels[channelName].sockets.add(socket);
         socket.join(channelName);
+        // Send existing private chat history to the newly joined socket
+        channels[channelName].privateMessages.forEach((m) => {
+            socket.emit('private-message', m);
+        });
         sendWatchers(channelName);
+    });
+
+    socket.on('private-message', (msg) => {
+        const channelName = socket.channelName;
+        if (!channelName) return;
+        const channel = channels[channelName];
+        if (!channel) return;
+        const data = { user: socket.username, message: msg };
+        channel.privateMessages.push(data);
+        if (channel.privateMessages.length > 100) channel.privateMessages.shift();
+        io.to(channelName).emit('private-message', data);
     });
 
     socket.on('bug', () => {
