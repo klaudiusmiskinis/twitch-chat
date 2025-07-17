@@ -1,28 +1,58 @@
-# Twitch Chat Viewer
+# Visualizador de Chat de Twitch
 
-This project streams messages from a Twitch channel and displays them in a web interface.
+Aplicación en Node.js que se conecta a un canal de Twitch y muestra sus mensajes en tiempo real a través de una interfaz web. Además permite un pequeño chat privado entre espectadores.
 
-## Configuration
+## Requisitos
 
-Default configuration values reside in `config.js`:
+- Node.js 20.x
+- npm
 
-- `port` – the HTTP server port (defaults to `3000`)
-- `channel` – the Twitch channel to connect to (defaults to `illojuan`)
+## Instalación
 
-At runtime you can override these by setting the environment variables `PORT` and
-`TWITCH_CHANNEL`.
-
-Example:
+Clona el repositorio e instala las dependencias:
 
 ```bash
-PORT=4000 TWITCH_CHANNEL=mychannel npm start
+git clone <url>
+cd twitch-chat
+npm install
 ```
 
-If no environment variables are provided the values from `config.js` will be used.
-Adjust `config.js` if you want to change the defaults in version control.
+## Configuración
 
-## Metrics
+Los valores por defecto se encuentran en `config.js`:
 
-The server exposes basic runtime metrics at `http://localhost:<port>/metrics`.
-These metrics include the number of connections, disconnections and detected
-misuse events.
+- `port` – puerto del servidor HTTP (por defecto 3000)
+- `channel` – canal de Twitch al que conectarse (por defecto `illojuan`)
+
+Puedes sobrescribirlos con las variables de entorno `PORT` y `TWITCH_CHANNEL`.
+
+Ejemplo:
+
+```bash
+PORT=4000 TWITCH_CHANNEL=midirecto npm start
+```
+
+## Puesta en marcha
+
+Arranca el servidor normalmente con:
+
+```bash
+npm start
+```
+
+Durante el desarrollo utiliza `nodemon` para recarga automática:
+
+```bash
+npm run dev
+```
+
+Una vez iniciado el servidor visita `http://localhost:<port>/` para acceder a la interfaz.
+
+## Endpoints
+
+- `/metrics` – muestra métricas de conexiones, desconexiones y eventos de mal uso.
+- `/messages/<canal>` – devuelve en formato JSON las últimas 100 publicaciones públicas almacenadas para el canal indicado.
+
+## Licencia
+
+MIT
