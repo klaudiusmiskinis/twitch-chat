@@ -94,3 +94,34 @@ b {
 .bg-color {
   background-color: var(--accent) !important;
 }
+
+#sidebar {
+  position: fixed;
+  top: 0;
+  right: -280px;
+  width: 280px;
+  height: 100%;
+  background: var(--panel-bg);
+  color: var(--text-color);
+  border-left: 1px solid rgba(0,0,0,0.1);
+  padding: 1rem;
+  overflow-y: auto;
+  transition: right 0.3s ease;
+  z-index: 1040;
+}
+
+#sidebar.open {
+  right: 0;
+}
+
+#open-sidebar {
+  background: var(--accent);
+  color: #fff;
+}
+
+#private-chat {
+  max-height: 40vh;
+  overflow-y: auto;
+  border: 1px solid rgba(0,0,0,0.1);
+  padding: 0.25rem;
+}
